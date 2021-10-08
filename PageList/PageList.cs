@@ -51,7 +51,21 @@ namespace EFCore.UnitOfWork.PageList
         /// </summary>
         /// <value>The has next page.</value>
         public bool HasNextPage => PageIndex - IndexFrom + 1 < TotalPages;
-
+        /// <summary>
+        /// Gets the has page jump.
+        /// </summary>
+        /// <value>The has page jump</value>
+        public int PageJump { get; set; }
+        /// <summary>
+        /// Gets the has start page
+        /// </summary>
+        /// <value>The has start page</value>
+        public int StartPage => Math.Max(PageIndex - PageJump, 1);
+        /// <summary>
+        /// Gets the has fish page
+        /// </summary>
+        /// <value>The has finish page</value>
+        public int FinishPage { get; set; }
         /// <summary>
         /// Initializes a new instance of the <see cref="PagedList{T}" /> class.
         /// </summary>
@@ -73,6 +87,7 @@ namespace EFCore.UnitOfWork.PageList
                 IndexFrom = indexFrom;
                 TotalCount = querable.Count();
                 TotalPages = (int)Math.Ceiling(TotalCount / (double)PageSize);
+                FinishPage = Math.Min(PageIndex + PageJump, TotalPages);
 
                 Items = querable.Skip((PageIndex - IndexFrom) * PageSize).Take(PageSize).ToList();
             }
@@ -83,7 +98,7 @@ namespace EFCore.UnitOfWork.PageList
                 IndexFrom = indexFrom;
                 TotalCount = source.Count();
                 TotalPages = (int)Math.Ceiling(TotalCount / (double)PageSize);
-
+                FinishPage = Math.Min(PageIndex + PageJump, TotalPages);
                 Items = source.Skip((PageIndex - IndexFrom) * PageSize).Take(PageSize).ToList();
             }
         }
@@ -147,6 +162,21 @@ namespace EFCore.UnitOfWork.PageList
         public bool HasNextPage => PageIndex - IndexFrom + 1 < TotalPages;
 
         /// <summary>
+        /// Gets the has page jump.
+        /// </summary>
+        /// <value>The has page jump</value>
+        public int PageJump { get; set; }
+        /// <summary>
+        /// Gets the has start page
+        /// </summary>
+        /// <value>The has start page</value>
+        public int StartPage => Math.Max(PageIndex - PageJump, 1);
+        /// <summary>
+        /// Gets the has fish page
+        /// </summary>
+        /// <value>The has finish page</value>
+        public int FinishPage { get; set; }
+        /// <summary>
         /// Initializes a new instance of the <see cref="PagedList{TSource, TResult}" /> class.
         /// </summary>
         /// <param name="source">The source.</param>
@@ -168,7 +198,7 @@ namespace EFCore.UnitOfWork.PageList
                 IndexFrom = indexFrom;
                 TotalCount = querable.Count();
                 TotalPages = (int)Math.Ceiling(TotalCount / (double)PageSize);
-
+                FinishPage = Math.Min(PageIndex + PageJump, TotalPages);
                 var items = querable.Skip((PageIndex - IndexFrom) * PageSize).Take(PageSize).ToArray();
 
                 Items = new List<TResult>(converter(items));
@@ -180,7 +210,7 @@ namespace EFCore.UnitOfWork.PageList
                 IndexFrom = indexFrom;
                 TotalCount = source.Count();
                 TotalPages = (int)Math.Ceiling(TotalCount / (double)PageSize);
-
+                FinishPage = Math.Min(PageIndex + PageJump, TotalPages);
                 var items = source.Skip((PageIndex - IndexFrom) * PageSize).Take(PageSize).ToArray();
 
                 Items = new List<TResult>(converter(items));
@@ -199,7 +229,7 @@ namespace EFCore.UnitOfWork.PageList
             IndexFrom = source.IndexFrom;
             TotalCount = source.TotalCount;
             TotalPages = source.TotalPages;
-
+            FinishPage = Math.Min(PageIndex + PageJump, TotalPages);
             Items = new List<TResult>(converter(source.Items));
         }
     }

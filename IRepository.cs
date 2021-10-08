@@ -105,7 +105,7 @@ namespace EFCore.UnitOfWork
                                                              int pageSize = 20,
                                                              bool disableTracking = true,
                                                              CancellationToken cancellationToken = default(CancellationToken)) where TResult : class;
-
+       
         /// <summary>
         /// Gets the first or default entity based on a predicate, orderby delegate and include delegate. This method defaults to a read-only, no-tracking query.
         /// </summary>
