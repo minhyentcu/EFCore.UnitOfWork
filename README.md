@@ -18,7 +18,7 @@ services.AddDbContext<ExampleDbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString(SystemConstants.MainConnectionString), sqlServerOptions =>
                 {
-                    sqlServerOptions.MigrationsAssembly((typeof(BaseSourceDbContext).Assembly).GetName().Name);
+                    sqlServerOptions.MigrationsAssembly((typeof(ExampleDbContext).Assembly).GetName().Name);
                 });
             }).AddUnitOfWork<ExampleDbContext>();
 ```
