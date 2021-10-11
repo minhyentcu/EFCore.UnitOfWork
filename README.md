@@ -4,7 +4,7 @@ A plugin for Microsoft.EntityFrameworkCore to support repository, unit of work p
 
 
 ## Installation
-```csharp
+```c
 Install-Package UnitOfWork.EntityFrameworkCore -Version 5.3.1
 ```
 
