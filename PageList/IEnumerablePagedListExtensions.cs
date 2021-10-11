@@ -17,7 +17,7 @@ namespace EFCore.UnitOfWork.PageList
         /// <param name="pageSize">The size of the page.</param>
         /// <param name="indexFrom">The start index value.</param>
         /// <returns>An instance of the inherited from <see cref="IPagedList{T}"/> interface.</returns>
-        public static IPagedList<T> ToPagedList<T>(this IEnumerable<T> source, int pageIndex, int pageSize, int indexFrom = 1) => new PagedList<T>(source, pageIndex, pageSize, indexFrom);
+        public static IPagedList<T> ToPagedList<T>(this IEnumerable<T> source, int pageIndex, int pageSize, int indexFrom = 1, int pageJump = 2) => new PagedList<T>(source, pageIndex, pageSize, indexFrom, pageJump);
 
         /// <summary>
         /// Converts the specified source to <see cref="IPagedList{T}"/> by the specified <paramref name="converter"/>, <paramref name="pageIndex"/> and <paramref name="pageSize"/>
@@ -30,6 +30,6 @@ namespace EFCore.UnitOfWork.PageList
         /// <param name="pageSize">The page size.</param>
         /// <param name="indexFrom">The start index value.</param>
         /// <returns>An instance of the inherited from <see cref="IPagedList{T}"/> interface.</returns>
-        public static IPagedList<TResult> ToPagedList<TSource, TResult>(this IEnumerable<TSource> source, Func<IEnumerable<TSource>, IEnumerable<TResult>> converter, int pageIndex, int pageSize, int indexFrom = 1) => new PagedList<TSource, TResult>(source, converter, pageIndex, pageSize, indexFrom);
+        public static IPagedList<TResult> ToPagedList<TSource, TResult>(this IEnumerable<TSource> source, Func<IEnumerable<TSource>, IEnumerable<TResult>> converter, int pageIndex, int pageSize, int indexFrom = 1, int pageJump = 2) => new PagedList<TSource, TResult>(source, converter, pageIndex, pageSize, indexFrom, pageJump);
     }
 }

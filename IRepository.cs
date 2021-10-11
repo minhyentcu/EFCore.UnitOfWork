@@ -36,8 +36,9 @@ namespace EFCore.UnitOfWork
         IPagedList<TEntity> GetPagedList(Expression<Func<TEntity, bool>> predicate = null,
                                          Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
                                          Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
-                                         int pageIndex = 0,
+                                         int pageIndex = 1,
                                          int pageSize = 20,
+                                         int pageJump = 2,
                                          bool disableTracking = true);
 
         /// <summary>
@@ -57,8 +58,9 @@ namespace EFCore.UnitOfWork
         Task<IPagedList<TEntity>> GetPagedListAsync(Expression<Func<TEntity, bool>> predicate = null,
                                                     Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
                                                     Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
-                                                    int pageIndex = 0,
+                                                    int pageIndex = 1,
                                                     int pageSize = 20,
+                                                    int pageJump = 2,
                                                     bool disableTracking = true,
                                                     CancellationToken cancellationToken = default(CancellationToken));
 
@@ -78,8 +80,9 @@ namespace EFCore.UnitOfWork
                                                   Expression<Func<TEntity, bool>> predicate = null,
                                                   Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
                                                   Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
-                                                  int pageIndex = 0,
+                                                  int pageIndex = 1,
                                                   int pageSize = 20,
+                                                  int pageJump = 2,
                                                   bool disableTracking = true) where TResult : class;
 
         /// <summary>
@@ -101,11 +104,38 @@ namespace EFCore.UnitOfWork
                                                              Expression<Func<TEntity, bool>> predicate = null,
                                                              Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
                                                              Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
-                                                             int pageIndex = 0,
+                                                             int pageIndex = 1,
                                                              int pageSize = 20,
+                                                             int pageJump = 2,
                                                              bool disableTracking = true,
                                                              CancellationToken cancellationToken = default(CancellationToken)) where TResult : class;
-       
+
+        /// <summary>
+        /// Gets the <see cref="IPagedList{TEntity}"/> based on a predicate, orderby delegate and page information. This method default no-tracking query.
+        /// </summary>
+        /// <param name="stages">The stages for projection.</param>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="orderBy">A function to order elements.</param>
+        /// <param name="include">A function to include navigation properties</param>
+        /// <param name="pageIndex">The index of page.</param>
+        /// <param name="pageSize">The size of the page.</param>
+        /// <param name="disableTracking"><c>True</c> to disable changing tracking; otherwise, <c>false</c>. Default to <c>true</c>.</param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>An <see cref="IPagedList{TEntity}"/> that contains elements that satisfy the condition specified by <paramref name="predicate"/>.</returns>
+        /// <remarks>This method default no-tracking query.</remarks>
+        Task<IPagedList<TResult>> GetStagesPagedListAsync<TResult>(IQueryable<TEntity> stages,
+                                                             Expression<Func<TEntity, TResult>> selector,
+                                                             Expression<Func<TEntity, bool>> predicate = null,
+                                                             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+                                                             Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
+                                                             int pageIndex = 1,
+                                                             int pageSize = 20,
+                                                             int pageJump = 2,
+                                                             bool disableTracking = true,
+                                                             CancellationToken cancellationToken = default(CancellationToken)) where TResult : class;
+
         /// <summary>
         /// Gets the first or default entity based on a predicate, orderby delegate and include delegate. This method defaults to a read-only, no-tracking query.
         /// </summary>
@@ -202,6 +232,12 @@ namespace EFCore.UnitOfWork
         /// <returns>The <see cref="IQueryable{TEntity}"/>.</returns>
         [Obsolete("This method is not recommended, please use GetPagedList or GetPagedListAsync methods")]
         IQueryable<TEntity> GetAll();
+
+        /// <summary>
+        /// Gets all entities. This method is not recommended
+        /// </summary>
+        /// <returns>The <see cref="IQueryable{TEntity}"/>.</returns>
+        IQueryable<TEntity> Queryable();
 
         /// <summary>
         /// Gets the count based on a predicate.

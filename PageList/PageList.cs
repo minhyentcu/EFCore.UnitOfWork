@@ -66,6 +66,7 @@ namespace EFCore.UnitOfWork.PageList
         /// </summary>
         /// <value>The has finish page</value>
         public int FinishPage { get; set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PagedList{T}" /> class.
         /// </summary>
@@ -73,7 +74,7 @@ namespace EFCore.UnitOfWork.PageList
         /// <param name="pageIndex">The index of the page.</param>
         /// <param name="pageSize">The size of the page.</param>
         /// <param name="indexFrom">The index from.</param>
-        internal PagedList(IEnumerable<T> source, int pageIndex, int pageSize, int indexFrom)
+        internal PagedList(IEnumerable<T> source, int pageIndex, int pageSize, int indexFrom, int pagejump = 2)
         {
             if (indexFrom > pageIndex)
             {
@@ -84,6 +85,7 @@ namespace EFCore.UnitOfWork.PageList
             {
                 PageIndex = pageIndex;
                 PageSize = pageSize;
+                PageJump = pagejump;
                 IndexFrom = indexFrom;
                 TotalCount = querable.Count();
                 TotalPages = (int)Math.Ceiling(TotalCount / (double)PageSize);
@@ -95,6 +97,7 @@ namespace EFCore.UnitOfWork.PageList
             {
                 PageIndex = pageIndex;
                 PageSize = pageSize;
+                PageJump = pagejump;
                 IndexFrom = indexFrom;
                 TotalCount = source.Count();
                 TotalPages = (int)Math.Ceiling(TotalCount / (double)PageSize);
@@ -184,7 +187,7 @@ namespace EFCore.UnitOfWork.PageList
         /// <param name="pageIndex">The index of the page.</param>
         /// <param name="pageSize">The size of the page.</param>
         /// <param name="indexFrom">The index from.</param>
-        public PagedList(IEnumerable<TSource> source, Func<IEnumerable<TSource>, IEnumerable<TResult>> converter, int pageIndex, int pageSize, int indexFrom)
+        public PagedList(IEnumerable<TSource> source, Func<IEnumerable<TSource>, IEnumerable<TResult>> converter, int pageIndex, int pageSize, int indexFrom, int pageJump = 2)
         {
             if (indexFrom > pageIndex)
             {
@@ -195,6 +198,7 @@ namespace EFCore.UnitOfWork.PageList
             {
                 PageIndex = pageIndex;
                 PageSize = pageSize;
+                PageJump = pageJump;
                 IndexFrom = indexFrom;
                 TotalCount = querable.Count();
                 TotalPages = (int)Math.Ceiling(TotalCount / (double)PageSize);
@@ -207,6 +211,7 @@ namespace EFCore.UnitOfWork.PageList
             {
                 PageIndex = pageIndex;
                 PageSize = pageSize;
+                PageJump = pageJump;
                 IndexFrom = indexFrom;
                 TotalCount = source.Count();
                 TotalPages = (int)Math.Ceiling(TotalCount / (double)PageSize);
@@ -226,6 +231,7 @@ namespace EFCore.UnitOfWork.PageList
         {
             PageIndex = source.PageIndex;
             PageSize = source.PageSize;
+            PageJump = source.PageJump;
             IndexFrom = source.IndexFrom;
             TotalCount = source.TotalCount;
             TotalPages = source.TotalPages;

@@ -71,6 +71,7 @@ namespace EFCore.UnitOfWork
                                                 Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
                                                 int pageIndex = 1,
                                                 int pageSize = 20,
+                                                int pageJump = 2,
                                                 bool disableTracking = true)
         {
             IQueryable<TEntity> query = _dbSet;
@@ -91,11 +92,11 @@ namespace EFCore.UnitOfWork
 
             if (orderBy != null)
             {
-                return orderBy(query).ToPagedList(pageIndex, pageSize);
+                return orderBy(query).ToPagedList(pageIndex, pageSize, 1, pageJump);
             }
             else
             {
-                return query.ToPagedList(pageIndex, pageSize);
+                return query.ToPagedList(pageIndex, pageSize, 1, pageJump);
             }
         }
 
@@ -118,6 +119,7 @@ namespace EFCore.UnitOfWork
                                                            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
                                                            int pageIndex = 1,
                                                            int pageSize = 20,
+                                                           int pageJump = 2,
                                                            bool disableTracking = true,
                                                            CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -139,11 +141,11 @@ namespace EFCore.UnitOfWork
 
             if (orderBy != null)
             {
-                return orderBy(query).ToPagedListAsync(pageIndex, pageSize, 1, cancellationToken);
+                return orderBy(query).ToPagedListAsync(pageIndex, pageSize, 1, pageJump, cancellationToken);
             }
             else
             {
-                return query.ToPagedListAsync(pageIndex, pageSize, 1, cancellationToken);
+                return query.ToPagedListAsync(pageIndex, pageSize, 1, pageJump, cancellationToken);
             }
         }
 
@@ -165,6 +167,7 @@ namespace EFCore.UnitOfWork
                                                          Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
                                                          int pageIndex = 1,
                                                          int pageSize = 20,
+                                                         int pageJump = 2,
                                                          bool disableTracking = true)
             where TResult : class
         {
@@ -186,11 +189,11 @@ namespace EFCore.UnitOfWork
 
             if (orderBy != null)
             {
-                return orderBy(query).Select(selector).ToPagedList(pageIndex, pageSize);
+                return orderBy(query).Select(selector).ToPagedList(pageIndex, pageSize, pageJump: pageJump);
             }
             else
             {
-                return query.Select(selector).ToPagedList(pageIndex, pageSize);
+                return query.Select(selector).ToPagedList(pageIndex, pageSize, pageJump: pageJump);
             }
         }
 
@@ -215,6 +218,7 @@ namespace EFCore.UnitOfWork
                                                                     Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
                                                                     int pageIndex = 1,
                                                                     int pageSize = 20,
+                                                                    int pageJump = 2,
                                                                     bool disableTracking = true,
                                                                     CancellationToken cancellationToken = default(CancellationToken))
             where TResult : class
@@ -237,11 +241,11 @@ namespace EFCore.UnitOfWork
 
             if (orderBy != null)
             {
-                return orderBy(query).Select(selector).ToPagedListAsync(pageIndex, pageSize, 1, cancellationToken);
+                return orderBy(query).Select(selector).ToPagedListAsync(pageIndex, pageSize, 1,pageJump, cancellationToken);
             }
             else
             {
-                return query.Select(selector).ToPagedListAsync(pageIndex, pageSize, 1, cancellationToken);
+                return query.Select(selector).ToPagedListAsync(pageIndex, pageSize, 1,pageJump, cancellationToken);
             }
         }
 
@@ -414,7 +418,7 @@ namespace EFCore.UnitOfWork
         /// </summary>
         /// <param name="keyValues">The values of the primary key for the entity to be found.</param>
         /// <returns>A <see cref="Task{TEntity}" /> that represents the asynchronous insert operation.</returns>
-        public virtual  ValueTask<TEntity> FindAsync(params object[] keyValues) => _dbSet.FindAsync(keyValues);
+        public virtual ValueTask<TEntity> FindAsync(params object[] keyValues) => _dbSet.FindAsync(keyValues);
 
         /// <summary>
         /// Finds an entity with the given primary key values. If found, is attached to the context and returned. If no entity is found, then null is returned.
@@ -470,7 +474,7 @@ namespace EFCore.UnitOfWork
         /// <returns>A <see cref="Task"/> that represents the asynchronous insert operation.</returns>
         public virtual ValueTask<EntityEntry<TEntity>> InsertAsync(TEntity entity, CancellationToken cancellationToken = default(CancellationToken))
         {
-            
+
             return _dbSet.AddAsync(entity, cancellationToken);
 
             // Shadow properties?
@@ -628,9 +632,9 @@ namespace EFCore.UnitOfWork
             return query;
         }
 
-        
-        
-        public Task<bool> ExistsAsync( Expression<Func<TEntity, bool>> condition, CancellationToken cancellationToken = default)
+
+
+        public Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> condition, CancellationToken cancellationToken = default)
         {
             return _dbSet.AnyAsync(condition, cancellationToken);
         }
@@ -642,7 +646,7 @@ namespace EFCore.UnitOfWork
 
         public Task<int> GetCountAsync(Expression<Func<TEntity, bool>> condition, CancellationToken cancellationToken = default)
         {
-            return _dbSet.CountAsync(condition,cancellationToken);
+            return _dbSet.CountAsync(condition, cancellationToken);
         }
 
         public Task<int> GetCountAsync(IEnumerable<Expression<Func<TEntity, bool>>> conditions, CancellationToken cancellationToken = default)
@@ -666,7 +670,7 @@ namespace EFCore.UnitOfWork
 
         public Task<long> GetLongCountAsync(Expression<Func<TEntity, bool>> condition, CancellationToken cancellationToken = default)
         {
-            return _dbSet.LongCountAsync(condition,cancellationToken);
+            return _dbSet.LongCountAsync(condition, cancellationToken);
         }
 
         public Task<long> GetLongCountAsync(IEnumerable<Expression<Func<TEntity, bool>>> conditions, CancellationToken cancellationToken = default)
@@ -688,6 +692,56 @@ namespace EFCore.UnitOfWork
             _dbContext.ChangeTracker.Clear();
         }
 
-       
+
+        /// <summary>
+        /// Gets the <see cref="IPagedList{TEntity}"/> based on a predicate, orderby delegate and page information. This method default no-tracking query.
+        /// </summary>
+        /// <param name="stages">The stages for projection.</param>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="orderBy">A function to order elements.</param>
+        /// <param name="include">A function to include navigation properties</param>
+        /// <param name="pageIndex">The index of page.</param>
+        /// <param name="pageSize">The size of the page.</param>
+        /// <param name="disableTracking"><c>True</c> to disable changing tracking; otherwise, <c>false</c>. Default to <c>true</c>.</param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>An <see cref="IPagedList{TEntity}"/> that contains elements that satisfy the condition specified by <paramref name="predicate"/>.</returns>
+        /// <remarks>This method default no-tracking query.</remarks>
+        public Task<IPagedList<TResult>> GetStagesPagedListAsync<TResult>(IQueryable<TEntity> stages, Expression<Func<TEntity, TResult>> selector, Expression<Func<TEntity, bool>> predicate = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null, int pageIndex = 1, int pageSize = 20, int pageJump = 2, bool disableTracking = true, CancellationToken cancellationToken = default) where TResult : class
+        {
+            IQueryable<TEntity> query = stages;
+            if (disableTracking)
+            {
+                query = query.AsNoTracking();
+            }
+
+            if (include != null)
+            {
+                query = include(query);
+            }
+
+            if (predicate != null)
+            {
+                query = query.Where(predicate);
+            }
+
+            if (orderBy != null)
+            {
+                return orderBy(query).Select(selector).ToPagedListAsync(pageIndex, pageSize, 1, pageJump, cancellationToken);
+            }
+            else
+            {
+                return query.Select(selector).ToPagedListAsync(pageIndex, pageSize, 1, pageJump, cancellationToken);
+            }
+        }
+        /// <summary>
+        /// Gets all entities. 
+        /// </summary>
+        /// <returns>The <see cref="IQueryable{TEntity}"/>.</returns>
+        public IQueryable<TEntity> Queryable()
+        {
+            return _dbSet;
+        }
     }
 }

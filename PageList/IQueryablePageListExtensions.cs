@@ -22,7 +22,7 @@ namespace EFCore.UnitOfWork.PageList
         /// </param>
         /// <param name="indexFrom">The start index value.</param>
         /// <returns>An instance of the inherited from <see cref="IPagedList{T}"/> interface.</returns>
-        public static async Task<IPagedList<T>> ToPagedListAsync<T>(this IQueryable<T> source, int pageIndex, int pageSize, int indexFrom = 0, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task<IPagedList<T>> ToPagedListAsync<T>(this IQueryable<T> source, int pageIndex, int pageSize, int indexFrom = 0, int pageJump = 2, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (indexFrom > pageIndex)
             {
@@ -37,6 +37,7 @@ namespace EFCore.UnitOfWork.PageList
             {
                 PageIndex = pageIndex,
                 PageSize = pageSize,
+                PageJump=pageJump,
                 IndexFrom = indexFrom,
                 TotalCount = count,
                 Items = items,
