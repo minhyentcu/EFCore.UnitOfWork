@@ -4,7 +4,7 @@ A plugin for Microsoft.EntityFrameworkCore to support repository, unit of work p
 
 
 ## Installation
-```c
+```csharp
 Install-Package UnitOfWork.EntityFrameworkCore -Version 5.3.1
 ```
 
@@ -23,7 +23,7 @@ services.AddDbContext<ExampleDbContext>(options =>
             }).AddUnitOfWork<ExampleDbContext>();
 ```
 After that, use the structure in your code like that:
-```c
+```csharp
 private readonly IUnitOfWork _unitOfWork;
 // Injection
  public ExampleController(IUnitOfWork<ExampleDbContext> unitOfWork )
@@ -32,13 +32,13 @@ private readonly IUnitOfWork _unitOfWork;
         }
 ```
 #returns GetAll
-```c
+```csharp
 public async Task GetAll(){
   var books= _unitOfWork.GetRepository<Book>().GetAll();
 }
 ```
 # returns Get ByFilter
-```c
+```csharp
 public async Task GetAllByFilter(){
   var blogs = _unitOfWork.GetRepository<Book>().GetAllByFilter(
                 predicate: x => x.Descriptions.Contains("Book Example"),
@@ -47,7 +47,7 @@ public async Task GetAllByFilter(){
 }
 ```
 # returns GetPaging
-```c
+```csharp
 public async Task GetAllByFilter(){
    var blogs = _unitOfWork.GetRepository<Blog>().GetPagedListAsync(
                predicate: x => x.Descriptions.Contains("Book Example"),
@@ -57,7 +57,7 @@ public async Task GetAllByFilter(){
 }
 ```
 # returns GetStagesPaging
-```c
+```csharp
 public async Task GetStagesPaging(){
    var repository = _unitOfWork.GetRepository<Book>();
    var query = repository.Queryable()
@@ -69,34 +69,34 @@ public async Task GetStagesPaging(){
 }
 ```
 # returns GetBookById
-```c
+```csharp
 public async Task voidGetBookById(int id){
   var book= await _unitOfWork.GetRepository<Book>().FindAsync(id);
 }
 ```
 # returns AddBook
-```c
+```csharp
 public async Task AddBook(Book book){
     await _unitOfWork.GetRepository<Book>().InsertAsync(book);
     await _unitOfWork.SaveChangesAsync();
 }
 ```
 # returns UpdateBook
-```c
+```csharp
 public async Task UpdateBook(Book book){
     _unitOfWork.GetRepository<Book>().Update(book);
     await _unitOfWork.SaveChangesAsync();
 }
 ```
 # returns DeleteBook
-```c
+```csharp
 public async Task DeleteBook(int id){
     _unitOfWork.GetRepository<Book>().Delete(id);
     await _unitOfWork.SaveChangesAsync();
 }
 ```
 # returns GetBookCount
-```c
+```csharp
 public async Task GetBookCount(){
    var count= _unitOfWork.GetRepository<Book>().CountAsync(id);
 }
