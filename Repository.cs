@@ -241,11 +241,11 @@ namespace EFCore.UnitOfWork
 
             if (orderBy != null)
             {
-                return orderBy(query).Select(selector).ToPagedListAsync(pageIndex, pageSize, 1,pageJump, cancellationToken);
+                return orderBy(query).Select(selector).ToPagedListAsync(pageIndex, pageSize, 1, pageJump, cancellationToken);
             }
             else
             {
-                return query.Select(selector).ToPagedListAsync(pageIndex, pageSize, 1,pageJump, cancellationToken);
+                return query.Select(selector).ToPagedListAsync(pageIndex, pageSize, 1, pageJump, cancellationToken);
             }
         }
 
@@ -735,8 +735,10 @@ namespace EFCore.UnitOfWork
                 return query.Select(selector).ToPagedListAsync(pageIndex, pageSize, 1, pageJump, cancellationToken);
             }
         }
+
+
         /// <summary>
-        /// Gets all entities. 
+        /// Gets all entities.
         /// </summary>
         /// <returns>The <see cref="IQueryable{TEntity}"/>.</returns>
         public IQueryable<TEntity> Queryable()
