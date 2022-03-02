@@ -417,6 +417,70 @@ namespace EFCore.UnitOfWork
         Task<long> GetLongCountAsync(IEnumerable<Expression<Func<TEntity, bool>>> conditions, CancellationToken cancellationToken = default);
 
         /// <summary>
+        /// Gets the max based on a predicate.
+        /// </summary>
+        /// <param name="predicate"></param>
+        ///  /// <param name="selector"></param>
+        /// <returns>decimal</returns>
+        T Max<T>(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, T>> selector = null);
+
+        /// <summary>
+        /// Gets the async max based on a predicate.
+        /// </summary>
+        /// <param name="predicate"></param>
+        ///  /// <param name="selector"></param>
+        /// <returns>decimal</returns>
+        Task<T> MaxAsync<T>(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, T>> selector = null, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Gets the min based on a predicate.
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <param name="selector"></param>
+        /// <returns>decimal</returns>
+        T Min<T>(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, T>> selector = null);
+
+        /// <summary>
+        /// Gets the async min based on a predicate.
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <param name="selector"></param>
+        /// <returns>decimal</returns>
+        Task<T> MinAsync<T>(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, T>> selector = null, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Gets the average based on a predicate.
+        /// </summary>
+        /// <param name="predicate"></param>
+        ///  /// <param name="selector"></param>
+        /// <returns>decimal</returns>
+        decimal Average(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, decimal>> selector = null);
+
+        /// <summary>
+        /// Gets the async average based on a predicate.
+        /// </summary>
+        /// <param name="predicate"></param>
+        ///  /// <param name="selector"></param>
+        /// <returns>decimal</returns>
+        Task<decimal> AverageAsync(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, decimal>> selector = null, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Gets the sum based on a predicate.
+        /// </summary>
+        /// <param name="predicate"></param>
+        ///  /// <param name="selector"></param>
+        /// <returns>decimal</returns>
+        decimal Sum(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, decimal>> selector = null);
+
+        /// <summary>
+        /// Gets the async sum based on a predicate.
+        /// </summary>
+        /// <param name="predicate"></param>
+        ///  /// <param name="selector"></param>
+        /// <returns>decimal</returns>
+        Task<decimal> SumAsync(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, decimal>> selector = null, CancellationToken cancellationToken = default);
+
+        /// <summary>
         /// Reset the DbContext state by removing all the tracked and attached entities.
         /// </summary>
         void ResetContextState();

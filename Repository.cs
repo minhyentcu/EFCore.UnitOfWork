@@ -451,7 +451,7 @@ namespace EFCore.UnitOfWork
         /// <param name="entity">The entity to insert.</param>
         public virtual void Insert(TEntity entity)
         {
-            var entry = _dbSet.Add(entity);
+            _dbSet.Add(entity);
         }
 
         /// <summary>
@@ -734,6 +734,119 @@ namespace EFCore.UnitOfWork
             {
                 return query.Select(selector).ToPagedListAsync(pageIndex, pageSize, 1, pageJump, cancellationToken);
             }
+        }
+
+
+        /// <summary>
+        /// Gets the max based on a predicate.
+        /// </summary>
+        /// <param name="predicate"></param>
+        ///  /// <param name="selector"></param>
+        /// <returns>decimal</returns>
+        public virtual T Max<T>(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, T>> selector = null)
+        {
+            if (predicate == null)
+                return _dbSet.Max(selector);
+            else
+                return _dbSet.Where(predicate).Max(selector);
+        }
+
+        /// <summary>
+        /// Gets the async max based on a predicate.
+        /// </summary>
+        /// <param name="predicate"></param>
+        ///  /// <param name="selector"></param>
+        /// <returns>decimal</returns>
+        public virtual async Task<T> MaxAsync<T>(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, T>> selector = null, CancellationToken cancellationToken = default)
+        {
+            if (predicate == null)
+                return await _dbSet.MaxAsync(selector, cancellationToken);
+            else
+                return await _dbSet.Where(predicate).MaxAsync(selector, cancellationToken);
+        }
+
+        /// <summary>
+        /// Gets the min based on a predicate.
+        /// </summary>
+        /// <param name="predicate"></param>
+        ///  /// <param name="selector"></param>
+        /// <returns>decimal</returns>
+        public virtual T Min<T>(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, T>> selector = null)
+        {
+            if (predicate == null)
+                return _dbSet.Min(selector);
+            else
+                return _dbSet.Where(predicate).Min(selector);
+        }
+
+        /// <summary>
+        /// Gets the async min based on a predicate.
+        /// </summary>
+        /// <param name="predicate"></param>
+        ///  /// <param name="selector"></param>
+        /// <returns>decimal</returns>
+        public virtual async Task<T> MinAsync<T>(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, T>> selector = null, CancellationToken cancellationToken = default)
+        {
+            if (predicate == null)
+                return await _dbSet.MinAsync(selector, cancellationToken);
+            else
+                return await _dbSet.Where(predicate).MinAsync(selector, cancellationToken);
+        }
+
+        /// <summary>
+        /// Gets the average based on a predicate.
+        /// </summary>
+        /// <param name="predicate"></param>
+        ///  /// <param name="selector"></param>
+        /// <returns>decimal</returns>
+        public virtual decimal Average(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, decimal>> selector = null)
+        {
+            if (predicate == null)
+                return _dbSet.Average(selector);
+            else
+                return _dbSet.Where(predicate).Average(selector);
+        }
+
+        /// <summary>
+        /// Gets the async average based on a predicate.
+        /// </summary>
+        /// <param name="predicate"></param>
+        ///  /// <param name="selector"></param>
+        /// <returns>decimal</returns>
+        public virtual async Task<decimal> AverageAsync(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, decimal>> selector = null, CancellationToken cancellationToken = default)
+        {
+            if (predicate == null)
+                return await _dbSet.AverageAsync(selector, cancellationToken);
+            else
+                return await _dbSet.Where(predicate).AverageAsync(selector, cancellationToken);
+        }
+
+        /// <summary>
+        /// Gets the sum based on a predicate.
+        /// </summary>
+        /// <param name="predicate"></param>
+        ///  /// <param name="selector"></param>
+        /// <returns>decimal</returns>
+        public virtual decimal Sum(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, decimal>> selector = null)
+        {
+            if (predicate == null)
+                return _dbSet.Sum(selector);
+            else
+                return _dbSet.Where(predicate).Sum(selector);
+        }
+
+        /// <summary>
+        /// Gets the async sum based on a predicate.
+        /// </summary>
+        /// <param name="predicate"></param>
+        ///  /// <param name="selector"></param>
+        /// <returns>decimal</returns>
+        public virtual async Task<decimal> SumAsync(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, decimal>> selector = null, CancellationToken cancellationToken = default)
+        {
+            if (predicate == null)
+                return await _dbSet.SumAsync(selector, cancellationToken);
+            else
+                return await _dbSet.Where(predicate).SumAsync(selector, cancellationToken);
         }
 
 
