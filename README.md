@@ -25,6 +25,9 @@ services.AddDbContext<ExampleDbContext>(options =>
                     sqlServerOptions.MigrationsAssembly((typeof(ExampleDbContext).Assembly).GetName().Name);
                 });
             }).AddUnitOfWork<ExampleDbContext>();
+(for .Net6,.Net7)
+builder.Services.AddDbContext<BaseSourceDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString(SystemConstants.MainConnectionString)))
+                .AddUnitOfWork<BaseSourceDbContext>();
 ```
 After that, use the structure in your code like that:
 ```csharp
