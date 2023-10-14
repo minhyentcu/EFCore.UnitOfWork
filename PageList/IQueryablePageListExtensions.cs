@@ -37,7 +37,7 @@ namespace EFCore.UnitOfWork.PageList
             {
                 PageIndex = pageIndex,
                 PageSize = pageSize,
-                PageJump=pageJump,
+                PageJump = pageJump,
                 IndexFrom = indexFrom,
                 TotalCount = count,
                 Items = items,
