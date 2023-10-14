@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <Version>6.0.3</Version>
+    <Version>7.0.1</Version>
     <Authors>minhyen97</Authors>
     <Company>Kteam</Company>
     <Description>Provides the UnitOfWork pattern for Microsoft.EntityFrameworkCore Pattern
