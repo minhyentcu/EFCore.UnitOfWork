@@ -5,7 +5,11 @@ A plugin for Microsoft.EntityFrameworkCore to support repository, unit of work p
 
 ## Installation
 ```c
-Install-Package UnitOfWork.EntityFrameworkCore -Version 5.3.1
+Install-Package UnitOfWork.EntityFrameworkCore -Version 5.3.1 (.NET5)
+or
+Install-Package UnitOfWork.EntityFrameworkCore -Version 6.0.3 (.NET6)
+or
+Install-Package UnitOfWork.EntityFrameworkCore -Version 7.0.2 (.NET7)
 ```
 
 
